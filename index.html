@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VaultixMC | Minecraft Server</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --card-bg: rgba(18, 18, 22, 0.85);
+      --card-hover: rgba(28, 28, 35, 0.95);
+      --border-color: rgba(255, 255, 255, 0.12);
+      --border-hover: rgba(255, 255, 255, 0.25);
+      --accent-yellow: #FFF800;
+      --text-main: #ffffff;
+      --text-sub: #a1a1aa;
+      --border-radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(135deg, #FF9B00 0%, #FFF800 100%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 30px 20px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+      max-width: 1040px;
+      width: 100%;
+    }
+
+    /* Modern Bento Box Base Styles */
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-hover);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 155, 0, 0.2);
+      background-color: var(--card-hover);
+    }
+
+    /* Full Brightness Background Images */
+    .card-bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      filter: brightness(1.1) contrast(1.05);
+      transition: transform 0.5s ease;
+    }
+
+    .card:hover .card-bg-img {
+      transform: scale(1.03);
+    }
+
+    /* Logo & Server IP Column */
+    .logo-column {
+      grid-column: span 4;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card-logo {
+      width: 100%;
+      height: 100%;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(18, 18, 22, 0.9);
+    }
+
+    .card-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Modern Copy IP Button */
+    .ip-button {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transition: all 0.25s ease;
+    }
+
+    .ip-button:hover {
+      background-color: #24242d;
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .ip-button svg {
+      stroke: var(--accent-yellow);
+    }
+
+    /* Store Card */
+    .card-store {
+      grid-column: span 5;
+      aspect-ratio: 16 / 10;
+    }
+
+    .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 60%);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 2;
+    }
+
+    .card-badge {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .card-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #ffffff;
+      text-shadow: 0 3px 10px rgba(0, 0, 0, 0.8);
+      letter-spacing: -0.5px;
+    }
+
+    /* Discord Card */
+    .card-discord {
+      grid-column: span 3;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .discord-icon-wrapper {
+      width: 56px;
+      height: 56px;
+      background: rgba(88, 101, 242, 0.15);
+      border: 1px solid rgba(88, 101, 242, 0.3);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .discord-icon {
+      width: 32px;
+      height: 32px;
+      fill: #5865F2;
+    }
+
+    .discord-count {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .discord-sub {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .online-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #23a55a;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #23a55a;
+    }
+
+    /* Stats Card */
+    .card-stats {
+      grid-column: span 6;
+      height: 210px;
+      position: relative;
+    }
+
+    .coming-soon-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(12, 12, 15, 0.82);
+      backdrop-filter: blur(6px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      gap: 6px;
+      z-index: 3;
+    }
+
+    .card-stats:hover .coming-soon-overlay {
+      opacity: 1;
+    }
+
+    .coming-soon-emoji {
+      font-size: 2.5rem;
+    }
+
+    .coming-soon-text {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent-yellow);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    /* How To Join Card */
+    .card-join {
+      grid-column: span 6;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .join-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-sub);
+    }
+
+    .field-box {
+      background-color: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.72rem;
+      color: var(--accent-yellow);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .logo-column, .card-store, .card-discord, .card-stats, .card-join {
+        grid-column: span 12;
+      }
+      
+      .card-logo, .card-store {
+        aspect-ratio: auto;
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- 1. LOGO & SERVER IP COLUMN -->
+    <div class="logo-column">
+      <div class="card card-logo">
+        <img src="vaultixmc_logo.png" alt="VaultixMC Logo">
+      </div>
+      <div class="ip-button" onclick="copyIP()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <span id="ip-text">VAULTIXMC.UK</span>
+      </div>
+    </div>
+
+    <!-- 2. STORE CARD -->
+    <a href="https://store.vaultixmc.uk" target="_blank" class="card card-store">
+      <img src="store.jpg" class="card-bg-img" alt="Store Background">
+      <div class="card-overlay">
+        <span class="card-badge">Official Store</span>
+        <h2 class="card-title">Store</h2>
+      </div>
+    </a>
+
+    <!-- 3. DISCORD CARD -->
+    <a href="https://discord.gg/vaultix" target="_blank" class="card card-discord">
+      <div class="discord-icon-wrapper">
+        <svg class="discord-icon" viewBox="0 0 127.14 96.36">
+          <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0,3.36,6.83A97.68,97.68,0,0,0,42.3,6.83,72.37,72.37,0,0,0,45.66,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-18.91-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,45.92,53.87,53,48.8,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,45.92,96.1,53,91.08,65.69,84.69,65.69Z"/>
+        </svg>
+      </div>
+      <div class="discord-count">Join Discord</div>
+      <div class="discord-sub">
+        <span class="online-dot"></span>
+        discord.gg/vaultix
+      </div>
+    </a>
+
+    <!-- 4. STATS CARD -->
+    <div class="card card-stats">
+      <img src="stats.jpg" class="card-bg-img" alt="Stats Background">
+      <div class="card-overlay">
+        <span class="card-badge">Leaderboards</span>
+        <h2 class="card-title">Stats</h2>
+      </div>
+      <div class="coming-soon-overlay">
+        <span class="coming-soon-emoji">👀</span>
+        <span class="coming-soon-text">Coming Soon</span>
+      </div>
+    </div>
+
+    <!-- 5. HOW TO JOIN CARD -->
+    <div class="card card-join">
+      <h2 class="card-title">How To Join</h2>
+      <div class="join-fields">
+        <div class="field-group">
+          <span class="field-label">Server Name</span>
+          <div class="field-box">VaultixMC</div>
+        </div>
+        <div class="field-group">
+          <span class="field-label">Server Address</span>
+          <div class="field-box">vaultixmc.uk</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function copyIP() {
+      const ip = "vaultixmc.uk";
+      navigator.clipboard.writeText(ip);
+      const textElement = document.getElementById("ip-text");
+      const originalText = textElement.innerText;
+      textElement.innerText = "COPIED!";
+      setTimeout(() => {
+        textElement.innerText = originalText;
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
